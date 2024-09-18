@@ -1,6 +1,11 @@
+## UI API
+## head모델과 tail모델을 거쳐 최종 추론 결과를 받을 때까지 걸린 총 시간 측정
+
+
 from flask import Flask, render_template, request, jsonify, logging
 import requests
 import io
+import time
 
 app = Flask(__name__)
 
@@ -40,12 +45,19 @@ def upload_image():
     file = request.files['file']
 
     try:
+        # 시간 측정 시작
+        start_time = time.time()
+
         # 이미지를 Head 모델 API로 전송하고, Head에서 Tail로 중간 추론 값 전송 및 최종 결과 반환
         final_response = send_image_to_head_and_tail(file)
 
+        # 시간 측정 종료 및 경과 시간 계산
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
         if final_response.status_code == 200:
-            # Tail 모델의 최종 예측 결과를 받아 클라이언트로 반환
-            return jsonify({'status': 'success', 'label': final_response.json()['label']})
+            # Tail 모델의 최종 예측 결과와 경과 시간을 클라이언트로 반환
+            return jsonify({'status': 'success', 'label': final_response.json()['label'], 'elapsed_time': elapsed_time})
         else:
             return jsonify({'status': 'error', 'message': 'Model prediction failed'}), 500
     except Exception as e:
@@ -62,4 +74,3 @@ def send_image_to_head_and_tail(file):
 if __name__ == '__main__':
     app.logger.setLevel(logging.DEBUG)
     app.run(host='0.0.0.0', port=5000, debug=True)
-    
