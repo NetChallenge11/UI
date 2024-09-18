@@ -1,0 +1,152 @@
+/* 스타일 시트 */
+
+/* Google Fonts 사용 */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* 전역 스타일 */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+/* 제목 스타일 */
+h1 {
+    color: #4A90E2;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 컨테이너 스타일 */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* 커스텀 드롭다운 스타일 */
+.custom-dropdown {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.selected-option {
+    background-color: #fff;
+    border: 2px solid #4A90E2;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    color: #4A90E2;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.selected-option:hover {
+    background-color: #4A90E2;
+    color: white;
+}
+
+.options-container {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    border: 2px solid #4A90E2;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+.custom-dropdown.active .options-container {
+    display: block;
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    color: #4A90E2;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.option:hover {
+    background-color: #4A90E2;
+    color: white;
+}
+
+/* Edge와 Core를 위한 공통 버튼 스타일 */
+input[type="checkbox"],
+input[type="radio"] {
+    display: none;
+}
+
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+    display: inline-block;
+    background-color: #ffffff;
+    border: 2px solid #4A90E2;
+    color: #4A90E2;
+    padding: 10px 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="checkbox"]:checked + label,
+input[type="radio"]:checked + label {
+    background-color: #4A90E2;
+    color: white;
+    transform: translateY(-2px);
+}
+
+input[type="checkbox"] + label:hover,
+input[type="radio"] + label:hover {
+    background-color: #357ABD;
+    color: white;
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+    background-color: #4A90E2;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #357ABD;
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    background-color: #2C5DA0;
+    transform: translateY(0);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form .form-control {
+    width: 100%;
+}
+
+form button {
+    align-self: flex-end;
+}
