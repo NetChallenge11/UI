@@ -39,35 +39,35 @@
 
         formData.append('file', imageFile);
 
-        // 시간 측정 시작 (UI to Head)
-        const startTimeUItoHead = new Date().getTime();
-        formData.append('client_start_time', startTimeUItoHead); 
+        // 시간 측정 시작 (UI to Model)
+        const startTimeUItoModel = new Date().getTime();
+        formData.append('client_start_time', startTimeUItoModel); 
 
         document.getElementById('loading').style.display = 'block';
 
         let elapsedTimeUItoResult; // elapsedTimeUItoResult 변수를 외부에서 선언
 
-        fetch('/upload_image', {
+        fetch('/upload_image', {  // '/upload_image' 엔드포인트로 요청
             method: 'POST',
             body: formData
         })
         .then(response => {
             // 서버 응답 시간 측정 (UI to final result)
             const endTime = new Date().getTime();
-            elapsedTimeUItoResult = (endTime - startTimeUItoHead) / 1000; 
+            elapsedTimeUItoResult = (endTime - startTimeUItoModel) / 1000; 
 
             return response.json();
         })
         .then(data => {
             document.getElementById('loading').style.display = 'none';
             if (data.status === 'success') {
-                const elapsedTimeHeadToTail = data.elapsed_time;
-                const elapsedTimeUItoHead = elapsedTimeUItoResult - elapsedTimeHeadToTail;
+                const elapsedTimeModel = data.elapsed_time; // 모델 처리 시간 (서버에서 전달)
+                const elapsedTimeUItoModel = elapsedTimeUItoResult - elapsedTimeModel; // UI to Model 시간 계산
 
                 document.getElementById('result').textContent = 
                     'Label: ' + data.label + 
-                    ', Elapsed Time (UI to Head): ' + elapsedTimeUItoHead.toFixed(3) + ' seconds' +
-                    ', Elapsed Time (Head to Tail): ' + elapsedTimeHeadToTail + ' seconds' + 
+                    ', Elapsed Time (UI to Model): ' + elapsedTimeUItoModel.toFixed(3) + ' seconds' +
+                    ', Elapsed Time (Model): ' + elapsedTimeModel + ' seconds' + 
                     ', Total Time (UI to Result): ' + elapsedTimeUItoResult.toFixed(3) + ' seconds';
             } else {
                 document.getElementById('result').textContent = 'Failed to predict: ' + data.message;
