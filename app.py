@@ -1,3 +1,5 @@
+## 서버 UI API
+
 from flask import Flask, render_template, request, jsonify, logging
 import requests
 import io
@@ -14,7 +16,7 @@ def index():
 @app.route('/upload_page')
 def upload_page():
     return render_template('upload.html')
-    
+
 # 기존 데이터 처리 라우트
 @app.route('/send_data', methods=['POST'])
 def send_data():
@@ -52,13 +54,25 @@ def upload_image():
         elapsed_time = end_time - start_time
 
         if final_response.status_code == 200:
-            # 모델의 최종 예측 결과와 경과 시간을 클라이언트로 반환
-            # (통합된 모델 API의 응답 형식에 따라 label 추출 방식 수정 필요)
-            return jsonify({'status': 'success', 'label': final_response.json()['prediction'][0], 'elapsed_time': elapsed_time}) 
-        else:
-            return jsonify({'status': 'error', 'message': 'Model prediction failed'}), 500
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+                    try:
+                        data = final_response.json()
+                        label = data.get('label')  # 모델 API 응답에 'label' 필드가 있다고 가정
+                        if label is None:
+                            return jsonify({'status': 'error', 'message': 'Invalid model response: missing label'}), 500
+
+                        return jsonify({'status': 'success', 'label': label, 'elapsed_time': elapsed_time})
+                    except (json.JSONDecodeError, KeyError) as e:
+                        app.logger.error(f"Error parsing model response: {str(e)}")
+                        return jsonify({'status': 'error', 'message': 'Invalid model response format'}), 500
+                else:
+                    app.logger.error(f"Model prediction failed with status code: {final_response.status_code}")
+                    return jsonify({'status': 'error', 'message': 'Model prediction failed'}), 500
+            except requests.exceptions.RequestException as e:
+                app.logger.error(f"Error sending request to model API: {str(e)}")
+                return jsonify({'status': 'error', 'message': 'Failed to communicate with model API'}), 500
+            except Exception as e:
+                app.logger.error(f"Unexpected error: {str(e)}")
+                return jsonify({'status': 'error', 'message': 'Internal server error'}), 500
 
 def send_image_to_model(file):
     model_url = "http://full-model-service/predict"  # 통합된 모델 API의 URL 및 포트로 수정 (가정)
